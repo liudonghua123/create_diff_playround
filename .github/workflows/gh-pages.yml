@@ -1,0 +1,33 @@
+name: Deploy
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+env:
+    FLET_DIST_DIR: dist
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v2
+          - uses: actions/setup-python@v4
+            with:
+                python-version: '3.11'
+          - name: Install flet
+            run: pip install flet
+          - name: build for web platform
+            run: |
+                # GITHUB_REPOSITORY={{github.repository}}
+                echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, user: ${GITHUB_REPOSITORY%/*}, project: ${GITHUB_REPOSITORY#*/}"
+                flet publish --base-url ${GITHUB_REPOSITORY#*/} main.py
+          - name: check jekyll build files on ${{env.FLET_DIST_DIR}}
+            run: |
+              ls -la ${{env.FLET_DIST_DIR}}
+          - name: Deploy to GitHub Pages 🚀
+            uses: peaceiris/actions-gh-pages@v3
+            with:
+              github_token: ${{secrets.GITHUB_TOKEN}}
+              publish_dir: ${{env.FLET_DIST_DIR}}
