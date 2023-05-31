@@ -88,9 +88,9 @@ def init_layout(page: Page):
   def create_diff_handler(e: ControlEvent):
     global current_diff_mode
     if current_diff_mode == DIFF_MODE.UNIFIED:
-      txt_diff.value = "\n".join(unified_diff(txt_content1.value, txt_content2.value))
+      txt_diff.value = "\n".join(unified_diff(txt_content1.value.split('\n'), txt_content2.value.split('\n')))
     elif current_diff_mode == DIFF_MODE.CONTEXT:
-      txt_diff.value = "\n".join(context_diff(txt_content1.value, txt_content2.value))
+      txt_diff.value = "\n".join(context_diff(txt_content1.value.split('\n'), txt_content2.value.split('\n')))
     page.update()
 
   file_picker = FilePicker(on_result=on_file_pick_result)
