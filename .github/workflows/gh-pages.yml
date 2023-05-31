@@ -47,7 +47,12 @@ jobs:
                 tar -xvf pyodide-${{env.PYODIDE_VERSION}}.tar.bz2 -C dist
                 sed -i 's#http.*pyodide.js#pyodide/pyodide.js#g' dist/python-worker.js
                 cat dist/python-worker.js
-          - name: check jekyll build files on ${{env.FLET_DIST_DIR}}
+          - name: patch python-worker.js to use customized flet-core
+            run: |
+                cp .github/workflows/flet_core-0.7.4-py3-none-any.whl dist/pyodide
+                patch dist/python-worker.js < .github/workflows/python-worker.js.patch
+                cat dist/python-worker.js
+          - name: check flet publish build files on ${{env.FLET_DIST_DIR}}
             run: |
               ls -la ${{env.FLET_DIST_DIR}}
           - name: Deploy to GitHub Pages 🚀
