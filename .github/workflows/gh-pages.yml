@@ -19,6 +19,23 @@ jobs:
                 python-version: '3.11'
           - name: Install flet
             run: pip install flet
+
+          - uses: actions/setup-java@v1
+            with:
+              java-version: "8.x"
+          - uses: subosito/flutter-action@v1
+            with:
+              channel: 'stable'            
+          - name: Build patched flet web
+            run: |
+                git clone https://github.com/liudonghua123/flet.git -b file_picker_bytes
+                cd flet/client
+                flutter pub get
+                flutter build web
+                cp -r build/web ../../web
+                cd ../..
+                python .github/workflows/patch_flet_web.py web
+
           - name: build for web platform
             run: |
                 # GITHUB_REPOSITORY={{github.repository}}
