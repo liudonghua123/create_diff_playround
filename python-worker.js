@@ -1,4 +1,4 @@
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js");
+importScripts("pyodide/pyodide.js");
 
 self.micropipIncludePre = false;
 self.pythonModuleName = null;
