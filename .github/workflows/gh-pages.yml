@@ -7,6 +7,7 @@ on:
 
 env:
     FLET_DIST_DIR: dist
+    PYODIDE_VERSION: 0.23.2
 
 jobs:
     deploy:
@@ -23,6 +24,12 @@ jobs:
                 # GITHUB_REPOSITORY={{github.repository}}
                 echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}, user: ${GITHUB_REPOSITORY%/*}, project: ${GITHUB_REPOSITORY#*/}"
                 flet publish --base-url ${GITHUB_REPOSITORY#*/} main.py
+          - name: use self-hosted pyodide
+            run: |
+                wget https://github.com/pyodide/pyodide/releases/download/${{env.PYODIDE_VERSION}}/pyodide-${{env.PYODIDE_VERSION}}.tar.bz2
+                tar -xvf pyodide-${{env.PYODIDE_VERSION}}.tar.bz2 -C dist
+                sed -i 's#http.*pyodide.js#pyodide/pyodide.js#g' dist/python-worker.js
+                cat dist/python-worker.js
           - name: check jekyll build files on ${{env.FLET_DIST_DIR}}
             run: |
               ls -la ${{env.FLET_DIST_DIR}}
