@@ -68,14 +68,11 @@ def init_layout(page: Page):
     # path - full path to a file. Works for desktop and mobile only. None on web.
     # TODO: support web, add bytes property to FilePickerFile
     # see also https://github.com/miguelpruivo/flutter_file_picker#load-result-and-file-details
-    if file_picker_file.path is None:
-      alert_dialog = AlertDialog(title=Text("Not supported on web currently, please paste the content manually"))
-      page.dialog = alert_dialog
-      alert_dialog.open = True
-      page.update()
-      return
-    with open(file_picker_file.path, "r") as f:
-      return f.read()
+    if file_picker_file.bytes:
+      return bytes.decode(file_picker_file.bytes)
+    if file_picker_file.path:
+      with open(file_picker_file.path, "r") as f:
+        return f.read()
 
   def on_file_pick_result(e: FilePickerResultEvent):
     global current_file_mode
