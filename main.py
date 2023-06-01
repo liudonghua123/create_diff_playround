@@ -51,6 +51,24 @@ cg = RadioGroup(
     value=current_diff_mode,
 )
 
+def split_lines_keep_delimiter(text: str) -> list[str]:
+  # https://bobbyhadz.com/blog/python-split-string-without-removing-delimiter
+  # return [f"{line}\n" for line in text.split("\n")]
+  # >>> s='bacon\neggs\n\nham\nguido\n'
+  # >>> s.splitlines(keepends=True)
+  # ['bacon\n', 'eggs\n', '\n', 'ham\n', 'guido\n']
+  # >>> split_lines_keep_delimiter(s)
+  # ['bacon\n', 'eggs\n', '\n', 'ham\n', 'guido\n', '\n']
+  # >>> s.split("\n")
+  # ['bacon', 'eggs', '', 'ham', 'guido', '']
+  # >>> s='bacon\neggs\n\nham\nguido'
+  # >>> s.splitlines(keepends=True)
+  # ['bacon\n', 'eggs\n', '\n', 'ham\n', 'guido']
+  # >>> split_lines_keep_delimiter(s)
+  # ['bacon\n', 'eggs\n', '\n', 'ham\n', 'guido\n']
+  # >>>
+  return text.splitlines(keepends=True)
+
 def init_layout(page: Page):
 
   def picker_file_1_handler(e: ControlEvent):
@@ -85,9 +103,9 @@ def init_layout(page: Page):
   def create_diff_handler(e: ControlEvent):
     global current_diff_mode
     if current_diff_mode == DIFF_MODE.UNIFIED:
-      txt_diff.value = "".join(unified_diff(txt_content1.value.split('\n'), txt_content2.value.split('\n')))
+      txt_diff.value = "".join(unified_diff(split_lines_keep_delimiter(txt_content1.value), split_lines_keep_delimiter(txt_content2.value)))
     elif current_diff_mode == DIFF_MODE.CONTEXT:
-      txt_diff.value = "".join(context_diff(txt_content1.value.split('\n'), txt_content2.value.split('\n')))
+      txt_diff.value = "".join(context_diff(split_lines_keep_delimiter(txt_content1.value), split_lines_keep_delimiter(txt_content2.value)))
     page.update()
 
   file_picker = FilePicker(on_result=on_file_pick_result)
