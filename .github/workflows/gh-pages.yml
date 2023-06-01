@@ -35,6 +35,8 @@ jobs:
                 cp -r build/web ../../web
                 cd ../..
                 python .github/workflows/patch_flet_web.py web
+                # cleanup, otherwise flet publish will packages these files to app.tar.gz
+                rm -rf web flet
 
           - name: build for web platform
             run: |
