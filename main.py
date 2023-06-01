@@ -67,6 +67,24 @@ def split_lines_keep_delimiter(text: str) -> list[str]:
   # >>> split_lines_keep_delimiter(s)
   # ['bacon\n', 'eggs\n', '\n', 'ham\n', 'guido\n']
   # >>>
+  # splited_text = text.split("\n")
+  # results = []
+  # for index, item in enumerate(splited_text):
+  #   if index < len(splited_text) - 1:
+  #     results.append(f"{item}\n")
+  #   else:
+  #     results.append(item)
+  # return results
+  # Every parts of the splitted text should be ended with \n, or the diff will not work correctly
+  # Method 1:
+  # [f"{line}\n" for line in "".join(['bacon\n', 'eggs\n', 'ham\n', 'guido']).split('\n')] => ['bacon\n', 'eggs\n', 'ham\n', 'guido\n']
+  # [f"{line}\n" for line in "".join(['bacon\n', 'eggs\n', 'ham\n', 'guido\n']).split('\n')] => ['bacon\n', 'eggs\n', 'ham\n', 'guido\n', '\n']
+  # return [f"{line}\n" for line in text.split("\n")]
+  # Method 2:
+  # "".join(['bacon\n', 'eggs\n', 'ham\n', 'guido']).splitlines(keepends=True) => ['bacon\n', 'eggs\n', 'ham\n', 'guido'] # the last item is not ended with \n
+  # "".join(['bacon\n', 'eggs\n', 'ham\n', 'guido\n']).splitlines(keepends=True) => ['bacon\n', 'eggs\n', 'ham\n', 'guido\n']
+  if not text.endswith("\n"):
+    text += "\n"
   return text.splitlines(keepends=True)
 
 def init_layout(page: Page):
